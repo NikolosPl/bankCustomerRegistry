@@ -32,3 +32,5 @@ bin/
 
 ### Others ###
 .idea
+config.properties
+target
