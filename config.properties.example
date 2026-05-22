@@ -1,3 +1,3 @@
 db.url=jdbc:postgresql://localhost:5432/nazwa_bazy
-db.user=postgres
+db.username=postgres
 db.password=password
