@@ -1,2 +1,2 @@
-public record Customer(long id, String first_name, String last_name, String pesel, String accountNumber, String errorInfo) {
+public record Customer(long id, String firstName, String lastName, String pesel, String accountNumber, String errorInfo) {
 }

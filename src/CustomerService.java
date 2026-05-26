@@ -12,8 +12,7 @@ public class CustomerService {
         this.rejectedCustomers = new ArrayList<>();
     }
     public void validateCustomers() throws Exception {
-        Connection conn = new DataBaseConnectionManager().connect();
-    try (conn;
+    try (Connection conn = new DataBaseConnectionManager().connect();
          PreparedStatement ps = conn.prepareStatement("SELECT id, first_name, last_name, pesel, account_number FROM customers;");
          ResultSet rs = ps.executeQuery()){
         HashSet<String> pesels = new HashSet<>();
@@ -27,13 +26,8 @@ public class CustomerService {
 
             Customer customer = new Customer(id, firstName, lastName, pesel, accountNumber,null);
 
-            if(customer.pesel().length() != 11){
-                customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] PESEL musi składać się z 11 cyfr");
-                this.rejectedCustomers.add(customer);
-                continue;
-            }
             if(!customer.pesel().matches("\\d{11}")){
-                customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] PESEL musi składać się tylko z cyfr");
+                customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] PESEL musi składać się tylko i wyłącznie z 11 cyfr");
                 this.rejectedCustomers.add(customer);
                 continue;
             }
@@ -45,14 +39,12 @@ public class CustomerService {
                 pesels.add(customer.pesel());
             }
 
-            if(accountNumbers.contains(customer.accountNumber())){
+            if(customer.accountNumber() != null && accountNumbers.contains(customer.accountNumber())){
                 customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] Klient o podanym numerze konta już istnieje");
                 this.rejectedCustomers.add(customer);
                 continue;
-            } else{
-                if(customer.accountNumber() != null){
-                    accountNumbers.add(customer.accountNumber());
-                }
+            } else if(customer.accountNumber() != null){
+                accountNumbers.add(customer.accountNumber());
             }
 
             this.validatedCustomers.add(customer);
