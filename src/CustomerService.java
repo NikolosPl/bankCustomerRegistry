@@ -7,15 +7,13 @@ import java.util.HashSet;
 public class CustomerService {
     private final ArrayList<Customer> validatedCustomers;
     private final ArrayList<Customer> rejectedCustomers;
-    private final DataBaseConnectionManager dataBaseConnectionManager;
     public CustomerService() throws Exception {
         this.validatedCustomers = new ArrayList<>();
         this.rejectedCustomers = new ArrayList<>();
-        this.dataBaseConnectionManager = new DataBaseConnectionManager();
         this.validateCustomers();
     }
     public void validateCustomers() throws Exception {
-    try (Connection conn = this.dataBaseConnectionManager.connect();
+    try (Connection conn = new DataBaseConnectionManager().connect();
          PreparedStatement ps = conn.prepareStatement("SELECT id, first_name, last_name, pesel, account_number FROM customers;");
          ResultSet rs = ps.executeQuery()){
         HashSet<String> pesels = new HashSet<>();
@@ -54,10 +52,10 @@ public class CustomerService {
         }
         }
     }
-    public ArrayList<Customer> getValidatedCustomers() throws Exception {
+    public ArrayList<Customer> getValidatedCustomers() {
         return  this.validatedCustomers;
     }
-    public ArrayList<Customer> getRejectedCustomers() throws Exception {
+    public ArrayList<Customer> getRejectedCustomers() {
         return  this.rejectedCustomers;
     }
 }
