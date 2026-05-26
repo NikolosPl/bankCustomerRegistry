@@ -1,5 +1,7 @@
 void main() throws Exception{
-    List<Customer> customers = new CustomerRepository().getCustomerData();
     TableGenerator tableGenerator = new TableGenerator();
-    tableGenerator.generateTable(customers);
+    CustomerService customers = new CustomerService();
+    customers.validateCustomers();
+    ArrayList<Customer> customersData = customers.getValidatedCustomers();
+    tableGenerator.generateTable(customersData);
 }

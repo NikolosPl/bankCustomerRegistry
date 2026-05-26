@@ -38,7 +38,7 @@ Program komunikuje się z użytkownikiem za pomocą interfejsu konsolowego (CLI)
 
 1. **Statusy Operacji:** Potwierdzenia sukcesu lub czytelne komunikaty o błędach (np. `[BŁĄD] Klient o podanym PESEL już istnieje w bazie danych`).
 2. **Prezentacja Wyników:** Lista wyszukanych klientów sformatowana w postaci czytelnej tabeli tekstowej:
-   `[ID] | [PESEL] | [Nazwisko, Imię] | [Numer Konta]`
+   `[ID] | [PESEL] | [Nazwisko Imię] | [Numer Konta]`
 3. **Logi Wydajnościowe:** Informacja o czasie wykonania zapytania oraz statusie zamknięcia połączenia JDBC.
 
 ---
@@ -46,10 +46,9 @@ Program komunikuje się z użytkownikiem za pomocą interfejsu konsolowego (CLI)
 ## 5. Architektura Plików (Struktura projektu)
 Podział na klasy zgodnie z architekturą warstwową i zasadą Single Responsibility:
 
-* **`Customer`** – Klasa typu POJO/Model reprezentująca encję klienta w systemie.
+* **`Customer`** – Klasa typu rekord reprezentująca encję klienta w systemie.
 * **`DatabaseConnectionManager`** – Klasa odpowiedzialna wyłącznie za inicjalizację, konfigurację (sterownik, URL, login, hasło) oraz bezpieczne dostarczanie obiektów `Connection`.
-* **`CustomerRepository` (DAO)** – Warstwa dostępu do danych, zawierająca czyste zapytania SQL i logikę JDBC.
-* **`CustomerService`** – Warstwa biznesowa realizująca walidację danych (np. długość PESEL, format konta) przed przekazaniem ich do repozytorium.
+* **`CustomerService`** – Warstwa biznesowa i dostępu do danych, zawierająca czyste zapytania SQL, logikę JDBC, walidację danych (np. długość PESEL, format konta).
 * **`Main`** – Menu konsolowe sterujące aplikacją, pobierające dane od użytkownika i wywołujące odpowiednie usługi.
 
 ---
