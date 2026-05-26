@@ -8,10 +8,11 @@ public class CustomerService {
     private final ArrayList<Customer> validatedCustomers;
     private final ArrayList<Customer> rejectedCustomers;
     private final DataBaseConnectionManager dataBaseConnectionManager;
-    public CustomerService(){
+    public CustomerService() throws Exception {
         this.validatedCustomers = new ArrayList<>();
         this.rejectedCustomers = new ArrayList<>();
         this.dataBaseConnectionManager = new DataBaseConnectionManager();
+        this.validateCustomers();
     }
     public void validateCustomers() throws Exception {
     try (Connection conn = this.dataBaseConnectionManager.connect();
@@ -28,6 +29,11 @@ public class CustomerService {
 
             Customer customer = new Customer(id, firstName, lastName, pesel, accountNumber,null);
 
+            if(customer.pesel().length() != 11){
+                customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] PESEL musi składać się z 11 cyfr");
+                this.rejectedCustomers.add(customer);
+                continue;
+            }
             if(pesels.contains(customer.pesel())){
                 customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] Klient o podanym PESEL już istnieje w bazie danych");
                 this.rejectedCustomers.add(customer);
@@ -36,7 +42,7 @@ public class CustomerService {
                 pesels.add(customer.pesel());
             }
 
-            if(accountNumbers.contains(customer.accountNumber())){
+            if(accountNumbers.contains(customer.accountNumber()) && customer.accountNumber() != null){
                 customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] Klient o podanym numerze konta już istnieje");
                 this.rejectedCustomers.add(customer);
                 continue;
@@ -44,22 +50,14 @@ public class CustomerService {
                 accountNumbers.add(customer.accountNumber());
             }
 
-
-            if(customer.pesel().length() != 11){
-                customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] PESEL musi składać się z 11 cyfr");
-                this.rejectedCustomers.add(customer);
-                continue;
-            }
             this.validatedCustomers.add(customer);
         }
         }
     }
     public ArrayList<Customer> getValidatedCustomers() throws Exception {
-        this.validateCustomers();
         return  this.validatedCustomers;
     }
     public ArrayList<Customer> getRejectedCustomers() throws Exception {
-        this.validateCustomers();
-        return  this.validatedCustomers;
+        return  this.rejectedCustomers;
     }
 }
