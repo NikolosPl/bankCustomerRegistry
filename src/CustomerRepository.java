@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 
 public class CustomerRepository {
-    private final ArrayList<Customer> customers;
+    private final CustomerService service;
     public CustomerRepository() throws Exception {
-        this.customers = new CustomerService().getValidatedCustomers();
+        this.service = new CustomerService();
     }
-    public ArrayList<Customer> getCustomersData(){
-        return  this.customers;
+    public ArrayList<Customer> getCustomerData() throws Exception {
+        return this.service.getValidatedCustomers();
+    }
+    public ArrayList<Customer> getRejectedCustomerData() throws Exception{
+        return this.service.getRejectedCustomers();
     }
 }
