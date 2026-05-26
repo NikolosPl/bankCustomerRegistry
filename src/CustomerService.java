@@ -42,7 +42,7 @@ public class CustomerService {
                 pesels.add(customer.pesel());
             }
 
-            if(accountNumbers.contains(customer.accountNumber()) && customer.accountNumber() != null){
+            if(customer.accountNumber() != null && accountNumbers.contains(customer.accountNumber())){
                 customer = new Customer(id, firstName, lastName, pesel, accountNumber,"[BŁĄD] Klient o podanym numerze konta już istnieje");
                 this.rejectedCustomers.add(customer);
                 continue;

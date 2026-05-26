@@ -5,25 +5,18 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DataBaseConnectionManager {
-    private Connection conn;
     public Connection connect() throws Exception {
-        try {
-            FileInputStream fis = new FileInputStream("config.properties");
+        try (FileInputStream fis = new FileInputStream("config.properties")) {
             Properties props = new Properties();
             props.load(fis);
-            this.conn = DriverManager.getConnection(
+            return DriverManager.getConnection(
                     props.getProperty("db.url"),
                     props.getProperty("db.username"),
                     props.getProperty("db.password")
             );
-            fis.close();
-            return this.conn;
         } catch (Exception e) {
             System.err.println("Failed to connect to the database: " + e.getMessage());
             throw e;
         }
-    }
-    public void close() throws SQLException {
-        this.conn.close();
     }
 }
