@@ -10,14 +10,14 @@ void main() throws Exception{
         System.out.println("5. Wyszukaj po PESEL");
         System.out.println("6. Wyjście\n");
         System.out.print("Wybierz opcje: ");
-        switch (scanner.next()){
+        switch (scanner.nextLine()){
             case "1" -> {
                 System.out.print("\n[DODAWANIE] Podaj imię: ");
                 String imie = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj nazwisko: ");
                 String nazwisko = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj PESEL: ");
-                String pesel = scanner.next();
+                String pesel = scanner.nextLine();
                 System.out.println();
                 service.addClient(imie,nazwisko,pesel);
                 System.out.println();
@@ -28,31 +28,31 @@ void main() throws Exception{
                 System.out.print("\n[DODAWANIE] Podaj nazwisko: ");
                 String nazwisko = scanner.nextLine();
                 System.out.print("\n[DODAWANIE] Podaj PESEL: ");
-                String pesel = scanner.next();
+                String pesel = scanner.nextLine();
                 System.out.print("\n[DODAWANIE] Podaj numer konta: ");
-                String numerKonta = scanner.next();
+                String numerKonta = scanner.nextLine();
                 System.out.println();
                 service.addClient(imie,nazwisko,pesel,numerKonta);
                 System.out.println();
             }
             case "3" -> {
                 System.out.print("\n[DODAWANIE] Podaj pesel: ");
-                String pesel = scanner.next();
+                String pesel = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj numer konta: ");
-                String numerKonta = scanner.next();
+                String numerKonta = scanner.nextLine();
                 System.out.println();
                 service.addNumberAccount(pesel, numerKonta);
                 System.out.println();
             }
             case "4" -> {
                 System.out.print("\n[WYSZUKIWANIE] Podaj nazwisko (lub fragment): ");
-                String lastName = scanner.next();
+                String lastName = scanner.nextLine();
                 System.out.println("\nWyniki wyszukiwania: ");
                 service.searchByLastName(lastName);
             }
             case "5" -> {
                 System.out.print("\n[WYSZUKIWANIE] Podaj pesel: ");
-                String pesel = scanner.next();
+                String pesel = scanner.nextLine();
                 System.out.println("\nWyniki wyszukiwania: ");
                 service.searchByPesel(pesel);
             }

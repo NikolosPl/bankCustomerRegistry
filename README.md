@@ -56,10 +56,10 @@ Aplikacja po uruchomieniu wita użytkownika tekstowym menu sterującym:
 === BANK CUSTOMER REGISTRY ===
 1. Dodaj nowego klienta
 2. Dodaj nowego klienta (z numerem konta)
-2. Przypisz numer konta
-3. Wyszukaj po nazwisku
-4. Wyszukaj po PESEL
-5. Wyjście
+3. Przypisz numer konta
+4. Wyszukaj po nazwisku
+5. Wyszukaj po PESEL
+6. Wyjście
 
 Wybierz opcję: 1
 

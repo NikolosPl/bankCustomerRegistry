@@ -10,7 +10,7 @@ public class TableGenerator {
         for(Customer c : customers){
             wID = Math.max(wID, String.valueOf(c.id()).length());
             wPesel = Math.max(wPesel, c.pesel().length());
-            wName = Math.max(wName, (c.lastName() + ", " + c.firstName()).length());
+            wName = Math.max(wName, (c.lastName() + " " + c.firstName()).length());
             wAccount = Math.max(wAccount, c.accountNumber() != null ? c.accountNumber().length() : "BRAK RACHUNKU".length());
         }
         String format = "%-" + wID + "s | %-" + wPesel + "s | %-" + wName + "s | %-" + wAccount + "s%n";

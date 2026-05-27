@@ -7,7 +7,7 @@ Stworzenie prostej, wydajnej aplikacji backendowej łączącej się z bazą dany
 Aplikacja operuje na relacyjnej strukturze danych w PostgreSQL. Każdy rekord klienta w bazie musi być zdefiniowany według następującego schematu:
 
 **Tabela `customers`:**
-* `id` (SERIAL / BIGSERIAL) – Główny klucz unikalny, generowany automatycznie.
+* `id` (SERIAL) – Główny klucz unikalny, generowany automatycznie.
 * `first_name` (VARCHAR(50)) – Imię klienta (pole wymagane).
 * `last_name` (VARCHAR(100)) – Nazwisko klienta (pole wymagane, indeksowane).
 * `pesel` (CHAR(11)) – Numer PESEL (pole wymagane, unikalne, indeksowane).
@@ -23,7 +23,6 @@ Aplikacja operuje na relacyjnej strukturze danych w PostgreSQL. Każdy rekord kl
 ### A. Zarządzanie Połączeniami i SQL (Bezpieczeństwo Techniczne)
 * **Zamykanie Zasobów:** Bezwzględne stosowanie konstrukcji *try-with-resources* dla obiektów `Connection`, `PreparedStatement` oraz `ResultSet` w celu zapobiegania wyciekom pamięci i blokowaniu wątków bazy danych.
 * **Ochrona przed SQL Injection:** Całkowity zakaz konkatenacji ciągów znaków w zapytaniach SQL. Każde zapytanie musi wykorzystywać sparametryzowane szablony `PreparedStatement`.
-* **Zarządzanie Transakcjami:** Obsługa transakcyjności (`commit`/`rollback`) przy operacjach zapisu, aby zapewnić integralność danych.
 
 ### B. Operacje na Danych (Logika Aplikacji)
 * **Dodawanie Klienta:** Rejestracja nowego klienta z walidacją unikalności numeru PESEL przed wykonaniem zapisu.

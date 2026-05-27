@@ -14,7 +14,7 @@ public class CustomerService {
 
     public void addClient(String firstName, String lastName, String pesel) throws Exception {
         if(!pesel.matches("\\d{11}")){
-            System.out.println("PESEL musi składać sie z 11 cyfr");
+            System.out.println("[BŁĄD] PESEL musi składać sie z 11 cyfr");
             return;
         }
         long start = System.nanoTime();
@@ -46,6 +46,7 @@ public class CustomerService {
         }
         if(!accountNumber.matches("\\d{26}")){
             System.out.println("[BŁĄD] Numer konta musi składać sie z 26 cyfr");
+            return;
         }
         long start = System.nanoTime();
         try(
@@ -73,17 +74,17 @@ public class CustomerService {
 
     public void addNumberAccount(String pesel, String accountNumber) throws Exception {
         if(!accountNumber.matches("\\d{26}")){
-            System.out.println("Numer konta musi składać sie z 26 cyfr");
+            System.out.println("[BŁĄD] Numer konta musi składać sie z 26 cyfr");
             return;
         }
         if(!pesel.matches("\\d{11}")){
-            System.out.println("Pesel musi składać sie z 11 cyfr");
+            System.out.println("[BŁĄD] Pesel musi składać sie z 11 cyfr");
             return;
         }
         long start = System.nanoTime();
         try(
                 Connection conn = new DataBaseConnectionManager().connect();
-                PreparedStatement check = conn.prepareStatement("SELECT * FROM customers WHERE pesel = ?");
+                PreparedStatement check = conn.prepareStatement("SELECT 1 FROM customers WHERE pesel = ?");
                 PreparedStatement insertAccountNumber = conn.prepareStatement("UPDATE customers SET account_number = ? WHERE pesel = ?")
                 ){
             check.setString(1, pesel);
@@ -112,7 +113,7 @@ public class CustomerService {
                 Connection conn = new DataBaseConnectionManager().connect();
                 PreparedStatement selectLastName = conn.prepareStatement("SELECT * FROM customers WHERE last_name LIKE ?")
                 ){
-            selectLastName.setString(1, "%" + lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase() + "%");
+            selectLastName.setString(1, lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase() + "%");
             try(ResultSet resultSet = selectLastName.executeQuery()){
                 while(resultSet.next()){
                     customers.add(new Customer(
