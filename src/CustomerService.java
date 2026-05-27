@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 public class CustomerService {
     private final ArrayList<Customer> validatedCustomers;
@@ -109,11 +110,13 @@ public class CustomerService {
             return;
         }
         try(Connection conn = new DataBaseConnectionManager().connect()){
-            PreparedStatement insertAccountNumber = conn.prepareStatement("EXPLAIN (ANALYZE, FORMAT JSON) UPDATE customers SET account_number = ? WHERE pesel = ?");
+            long start = System.nanoTime();
+            PreparedStatement insertAccountNumber = conn.prepareStatement("UPDATE customers SET account_number = ? WHERE pesel = ?");
             insertAccountNumber.setString(1, accountNumber);
             insertAccountNumber.setString(2, pesel);
+            long czasWykonania = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
             System.out.println("Poprawnie dodano numer konta do uzytkownika o peselu: " + pesel);
-//            System.out.println("[JDBC LOG] Zapytanie wykonane w " + insertAccountNumber.executeQuery().getString(0) + "ms. Połączenie bezpiecznie zamknięte.");
+            System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.");
         } catch (PSQLException _){
             System.out.println("[BŁĄD] Nie udało sie przypisac numeru konta do uzytkownika o peselu: " + pesel);
         }
