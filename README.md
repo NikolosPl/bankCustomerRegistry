@@ -6,11 +6,10 @@ BankCustomerRegistry to lekka aplikacja backendowa napisana w czystej Javie, sł
 ## 🚀 Główne Funkcjonalności
 *   **Bezpieczne Zarządzanie Zasobami:** Wykorzystanie mechanizmu *try-with-resources* do automatycznego zamykania połączeń (`Connection`, `PreparedStatement`, `ResultSet`), co zapobiega wyciekom pamięci.
 *   **Ochrona przed SQL Injection:** Całkowite wyeliminowanie podatności dzięki stosowaniu wyłącznie sparametryzowanych zapytań `PreparedStatement`.
-*   **Zarządzanie Transakcjami:** Obsługa transakcyjności (`commit`/`rollback`) gwarantująca spójność i integralność danych bankowych.
 *   **Operacje na danych:**
     *   Rejestracja nowych klientów wraz z weryfikacją unikalności numeru PESEL.
     *   Nadawanie oraz aktualizacja unikalnych, 26-cyfrowych numerów kont bankowych.
-    *   Zaawansowane wyszukiwanie po nazwisku (z użyciem operatora `LIKE`) oraz precyzyjne wyszukiwanie po numerze PESEL.
+    *   Wyszukiwanie po nazwisku (z użyciem operatora `LIKE`) oraz precyzyjne wyszukiwanie po numerze PESEL.
 
 ## 🛠 Technologia
 *   **Język:** Java 26
@@ -20,7 +19,7 @@ BankCustomerRegistry to lekka aplikacja backendowa napisana w czystej Javie, sł
 
 ## 📁 Struktura Projektu
 *   `Customer.java` – Klasa typu rekord reprezentująca encję klienta w systemie.
-*   `DatabaseConnectionManager.java` – Odpowiedzialna za konfigurację parametrów bazy danych oraz bezpieczne dostarczanie obiektów połączeń.
+*   `DataBaseConnectionManager.java` – Odpowiedzialna za konfigurację parametrów bazy danych oraz bezpieczne dostarczanie obiektów połączeń.
 *   `CustomerService.java` – Warstwa biznesowa i dostępu do danych, zawierająca czyste zapytania SQL, logikę JDBC, walidację danych (np. długość PESEL, format konta).
 *   `Main.java` – Interfejs wiersza poleceń (CLI) sterujący aplikacją i pobierający dane od użytkownika.
 
@@ -44,7 +43,7 @@ CREATE INDEX idx_customers_pesel ON customers(pesel);
 1. Klonowanie i przygotowanie bazy
    Upewnij się, że masz uruchomioną bazę PostgreSQL z utworzoną tabelą według schematu z sekcji powyżej.
 2. Konfiguracja połączenia
-   Stwórz plik config.properties, skopiuj calość z config.properties.example i podstaw swoje dane:
+   Stwórz plik config.properties, skopiuj całość z config.properties.example i podstaw swoje dane:
 ```properties
 db.url=jdbc:postgresql://localhost:5432/nazwa_bazy
 db.username=nazwa_uzytkownika
@@ -56,6 +55,7 @@ Aplikacja po uruchomieniu wita użytkownika tekstowym menu sterującym:
 ```text
 === BANK CUSTOMER REGISTRY ===
 1. Dodaj nowego klienta
+2. Dodaj nowego klienta (z numerem konta)
 2. Przypisz numer konta
 3. Wyszukaj po nazwisku
 4. Wyszukaj po PESEL
@@ -81,5 +81,5 @@ ID   | PESEL       | Nazwisko i Imię     | Numer Konta
 --------------------------------------------------------------------------------
 1    | 92051412345 | Kowalski Jan        | BRAK RACHUNKU
 --------------------------------------------------------------------------------
-[JDBC LOG] Pobrano rekordów: 1. Zasoby ResultSet oraz PreparedStatement zamknięte.
+[JDBC LOG] Zapytanie wykonane w 14 ms. Połączenie bezpiecznie zamknięte.
 ```

@@ -13,9 +13,9 @@ void main() throws Exception{
         switch (scanner.next()){
             case "1" -> {
                 System.out.print("\n[DODAWANIE] Podaj imię: ");
-                String imie = scanner.next();
+                String imie = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj nazwisko: ");
-                String nazwisko = scanner.next();
+                String nazwisko = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj PESEL: ");
                 String pesel = scanner.next();
                 System.out.println();
@@ -24,9 +24,9 @@ void main() throws Exception{
             }
             case "2" -> {
                 System.out.print("\n[DODAWANIE] Podaj imię: ");
-                String imie = scanner.next();
+                String imie = scanner.nextLine();
                 System.out.print("\n[DODAWANIE] Podaj nazwisko: ");
-                String nazwisko = scanner.next();
+                String nazwisko = scanner.nextLine();
                 System.out.print("\n[DODAWANIE] Podaj PESEL: ");
                 String pesel = scanner.next();
                 System.out.print("\n[DODAWANIE] Podaj numer konta: ");

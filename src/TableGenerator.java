@@ -14,7 +14,7 @@ public class TableGenerator {
             wAccount = Math.max(wAccount, c.accountNumber() != null ? c.accountNumber().length() : "BRAK RACHUNKU".length());
         }
         String format = "%-" + wID + "s | %-" + wPesel + "s | %-" + wName + "s | %-" + wAccount + "s%n";
-        String sep = "-".repeat(wID + wPesel + wName + wAccount + 9 + 5); // 3 separatory x 3 znaki (" | "); 5 dla wygladu
+        String sep = "-".repeat(wID + wPesel + wName + wAccount + 9); // 3 separatory x 3 znaki (" | ")
         System.out.println(sep);
         System.out.printf(format, "ID", "PESEL", "Nazwisko Imie", "Numer konta");
         System.out.println(sep);

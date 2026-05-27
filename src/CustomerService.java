@@ -44,7 +44,7 @@ public class CustomerService {
             System.out.println("[BŁĄD] PESEL musi składać sie z 11 cyfr");
             return;
         }
-        if(!pesel.matches("\\d{26}")){
+        if(!accountNumber.matches("\\d{26}")){
             System.out.println("[BŁĄD] Numer konta musi składać sie z 26 cyfr");
         }
         long start = System.nanoTime();
@@ -120,8 +120,7 @@ public class CustomerService {
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
                         resultSet.getString("pesel"),
-                        resultSet.getString("account_number"),
-                        null
+                        resultSet.getString("account_number")
                     ));
                 }
             }
@@ -150,8 +149,7 @@ public class CustomerService {
                             resultSet.getString("first_name"),
                             resultSet.getString("last_name"),
                             resultSet.getString("pesel"),
-                            resultSet.getString("account_number"),
-                            null
+                            resultSet.getString("account_number")
                     ));
                 }
             }
