@@ -61,47 +61,24 @@ public class CustomerService {
         return  this.rejectedCustomers;
     }
 
-    public void addClient(String firstName, String lastName, String pesel, String accountNumber) throws Exception {
-        if(!pesel.matches("\\d{11}")){
-            System.out.println("PESEL musi skladac sie z 11 cyfr");
-            return;
-        }
-        if(!accountNumber.matches("\\d{26}")){
-            System.out.println("Numer konta musi skladac sie z 26 cyfr");
-        }
-        try (Connection conn = new DataBaseConnectionManager().connect();
-             PreparedStatement insertInto = conn.prepareStatement("EXPLAIN (ANALYZE, FORMAT JSON) INSERT INTO customers(last_name, first_name, pesel, account_number) VALUES(?, ?, ?, ?)")) {
-            insertInto.setString(1, lastName);
-            insertInto.setString(2, firstName);
-            insertInto.setString(3, pesel);
-            insertInto.setString(4, accountNumber);
-            insertInto.executeUpdate();
-            System.out.println("[SUKCES] Klient " + firstName + " " + lastName + " został pomyślnie dodany do bazy danych.");
-            System.out.println("[JDBC LOG] Zapytanie wykonane w " + insertInto.executeQuery().getString(1) + "ms. Połączenie bezpiecznie zamknięte.");
-        } catch (PSQLException _){
-
-        }
-
-
-    }
     public void addClient(String firstName, String lastName, String pesel) throws Exception {
         if(!pesel.matches("\\d{11}")){
             System.out.println("PESEL musi skladac sie z 11 cyfr");
             return;
         }
-        try (Connection conn = new DataBaseConnectionManager().connect();
-             PreparedStatement insertInto = conn.prepareStatement("EXPLAIN (ANALYZE , FORMAT JSON ) INSERT INTO customers(last_name, first_name, pesel) VALUES(?, ?, ?)")) {
+        try(Connection conn = new DataBaseConnectionManager().connect()){
+            long start = System.nanoTime();
+            PreparedStatement insertInto = conn.prepareStatement("INSERT INTO customers(last_name, first_name, pesel) VALUES(?, ?, ?)");
             insertInto.setString(1, lastName);
             insertInto.setString(2, firstName);
             insertInto.setString(3, pesel);
             insertInto.executeUpdate();
+            long czasWykonania = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
             System.out.println("[SUKCES] Klient " + firstName + " " + lastName + " został pomyślnie dodany do bazy danych.");
-            System.out.println("[JDBC LOG] Zapytanie wykonane w " + insertInto.executeQuery().getString(1) + "ms. Połączenie bezpiecznie zamknięte.");
+            System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.");
         } catch (PSQLException _){
-            System.out.println("[BŁĄD] Klient nie został dodany.");
+            System.out.println("[BŁĄD] Nie udało sie dodac klienta.");
         }
-
-
     }
 
     public void addNumberAccount(String pesel, String accountNumber) throws Exception {
@@ -114,8 +91,9 @@ public class CustomerService {
             PreparedStatement insertAccountNumber = conn.prepareStatement("UPDATE customers SET account_number = ? WHERE pesel = ?");
             insertAccountNumber.setString(1, accountNumber);
             insertAccountNumber.setString(2, pesel);
+            insertAccountNumber.executeUpdate();
             long czasWykonania = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-            System.out.println("Poprawnie dodano numer konta do uzytkownika o peselu: " + pesel);
+            System.out.println("[SUCKES] Poprawnie dodano numer konta do uzytkownika o peselu: " + pesel);
             System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.");
         } catch (PSQLException _){
             System.out.println("[BŁĄD] Nie udało sie przypisac numeru konta do uzytkownika o peselu: " + pesel);
