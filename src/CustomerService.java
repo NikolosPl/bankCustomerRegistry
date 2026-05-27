@@ -1,3 +1,5 @@
+import org.postgresql.util.PSQLException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,5 +58,64 @@ public class CustomerService {
     }
     public ArrayList<Customer> getRejectedCustomers() {
         return  this.rejectedCustomers;
+    }
+
+    public void addClient(String firstName, String lastName, String pesel, String accountNumber) throws Exception {
+        if(!pesel.matches("\\d{11}")){
+            System.out.println("PESEL musi skladac sie z 11 cyfr");
+            return;
+        }
+        if(!accountNumber.matches("\\d{26}")){
+            System.out.println("Numer konta musi skladac sie z 26 cyfr");
+        }
+        try (Connection conn = new DataBaseConnectionManager().connect();
+             PreparedStatement insertInto = conn.prepareStatement("EXPLAIN (ANALYZE, FORMAT JSON) INSERT INTO customers(last_name, first_name, pesel, account_number) VALUES(?, ?, ?, ?)")) {
+            insertInto.setString(1, lastName);
+            insertInto.setString(2, firstName);
+            insertInto.setString(3, pesel);
+            insertInto.setString(4, accountNumber);
+            insertInto.executeUpdate();
+            System.out.println("[SUKCES] Klient " + firstName + " " + lastName + " został pomyślnie dodany do bazy danych.");
+            System.out.println("[JDBC LOG] Zapytanie wykonane w " + insertInto.executeQuery().getString(1) + "ms. Połączenie bezpiecznie zamknięte.");
+        } catch (PSQLException _){
+
+        }
+
+
+    }
+    public void addClient(String firstName, String lastName, String pesel) throws Exception {
+        if(!pesel.matches("\\d{11}")){
+            System.out.println("PESEL musi skladac sie z 11 cyfr");
+            return;
+        }
+        try (Connection conn = new DataBaseConnectionManager().connect();
+             PreparedStatement insertInto = conn.prepareStatement("EXPLAIN (ANALYZE , FORMAT JSON ) INSERT INTO customers(last_name, first_name, pesel) VALUES(?, ?, ?)")) {
+            insertInto.setString(1, lastName);
+            insertInto.setString(2, firstName);
+            insertInto.setString(3, pesel);
+            insertInto.executeUpdate();
+            System.out.println("[SUKCES] Klient " + firstName + " " + lastName + " został pomyślnie dodany do bazy danych.");
+            System.out.println("[JDBC LOG] Zapytanie wykonane w " + insertInto.executeQuery().getString(1) + "ms. Połączenie bezpiecznie zamknięte.");
+        } catch (PSQLException _){
+            System.out.println("[BŁĄD] Klient nie został dodany.");
+        }
+
+
+    }
+
+    public void addNumberAccount(String pesel, String accountNumber) throws Exception {
+        if(!accountNumber.matches("\\d{26}")){
+            System.out.println("Numer konta musi skladac sie z 26 cyfr");
+            return;
+        }
+        try(Connection conn = new DataBaseConnectionManager().connect()){
+            PreparedStatement insertAccountNumber = conn.prepareStatement("EXPLAIN (ANALYZE, FORMAT JSON) UPDATE customers SET account_number = ? WHERE pesel = ?");
+            insertAccountNumber.setString(1, accountNumber);
+            insertAccountNumber.setString(2, pesel);
+            System.out.println("Poprawnie dodano numer konta do uzytkownika o peselu: " + pesel);
+//            System.out.println("[JDBC LOG] Zapytanie wykonane w " + insertAccountNumber.executeQuery().getString(0) + "ms. Połączenie bezpiecznie zamknięte.");
+        } catch (PSQLException _){
+            System.out.println("[BŁĄD] Nie udało sie przypisac numeru konta do uzytkownika o peselu: " + pesel);
+        }
     }
 }

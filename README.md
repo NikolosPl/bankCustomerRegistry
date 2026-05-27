@@ -19,10 +19,9 @@ BankCustomerRegistry to lekka aplikacja backendowa napisana w czystej Javie, sł
 *   **Architektura:** Warstwowa, oparta o zasady Clean Code oraz Single Responsibility Principle.
 
 ## 📁 Struktura Projektu
-*   `Customer.java` – Klasa typu POJO reprezentująca encję klienta w systemie.
+*   `Customer.java` – Klasa typu rekord reprezentująca encję klienta w systemie.
 *   `DatabaseConnectionManager.java` – Odpowiedzialna za konfigurację parametrów bazy danych oraz bezpieczne dostarczanie obiektów połączeń.
-*   `CustomerRepository.java` (DAO) – Warstwa dostępu do danych, zawierająca czyste, sparametryzowane zapytania SQL.
-*   `CustomerService.java` – Warstwa biznesowa realizująca walidację danych (np. format konta, długość PESEL) przed ich zapisem.
+*   `CustomerService.java` – Warstwa biznesowa i dostępu do danych, zawierająca czyste zapytania SQL, logikę JDBC, walidację danych (np. długość PESEL, format konta).
 *   `Main.java` – Interfejs wiersza poleceń (CLI) sterujący aplikacją i pobierający dane od użytkownika.
 
 ## 📋 Struktura i Inicjalizacja Bazy Tabela (SQL)
@@ -45,21 +44,11 @@ CREATE INDEX idx_customers_pesel ON customers(pesel);
 1. Klonowanie i przygotowanie bazy
    Upewnij się, że masz uruchomioną bazę PostgreSQL z utworzoną tabelą według schematu z sekcji powyżej.
 2. Konfiguracja połączenia
-   W pliku DatabaseConnectionManager.java uzupełnij poprawne dane dostępowe do swojej bazy danych:
-```java
-private static final String URL = "jdbc:postgresql://localhost:5432/nazwa_bazy";
-private static final String USER = "twoj_uzytkownik";
-private static final String PASSWORD = "twoje_haslo";
-```
-
-3. Kompilacja i uruchomienie
-   Skompiluj projekt wraz ze sterownikiem JDBC PostgreSQL (postgresql-42.x.x.jar) znajdującym się w katalogu projektu:
-```bash
-# Kompilacja plików źródłowych
-javac -cp .:postgresql.jar *.java
-
-# Uruchomienie aplikacji
-java -cp .:postgresql.jar Main
+   Stwórz plik config.properties, skopiuj calość z config.properties.example i podstaw swoje dane:
+```properties
+db.url=jdbc:postgresql://localhost:5432/nazwa_bazy
+db.username=nazwa_uzytkownika
+db.password=twoje_haslo
 ```
 
 ## 💻 Przykład działania (Interfejs CLI)
