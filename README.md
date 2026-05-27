@@ -73,7 +73,7 @@ Wybierz opcję: 1
 ### Przykład wyszukiwania:
 ```text
 Wybierz opcję: 3
-[WYSZUKIWANIE] Podaj nazwisko (lub fragment): Kowal%
+[WYSZUKIWANIE] Podaj nazwisko (lub fragment): Kowal
 
 Wyniki wyszukiwania:
 --------------------------------------------------------------------------------

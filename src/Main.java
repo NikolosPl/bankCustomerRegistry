@@ -9,8 +9,8 @@ void main() throws Exception{
         System.out.println("4. Wyszukaj po PESEL");
         System.out.println("5. Wyjście\n");
         System.out.print("Wybierz opcje: ");
-        switch (new Scanner(System.in).nextByte()){
-            case 1 -> {
+        switch (scanner.next()){
+            case "1" -> {
                 System.out.print("\n[DODAWANIE] Podaj imie: ");
                 String imie = scanner.next();
                 System.out.print("[DODAWANIE] Podaj nazwisko: ");
@@ -21,17 +21,32 @@ void main() throws Exception{
                 service.addClient(imie,nazwisko,pesel);
                 System.out.println();
             }
-            case 2 -> {
+            case "2" -> {
+                System.out.print("\n[DODAWANIE] Podaj pesel: ");
+                String pesel = scanner.next();
+                System.out.print("[DODAWANIE] Podaj numer konta: ");
+                String numerKonta = scanner.next();
+                System.out.println();
+                service.addNumberAccount(pesel, numerKonta);
+                System.out.println();
             }
-            case 3 -> {
+            case "3" -> {
+                System.out.print("\n[WYSZUKIWANIE] Podaj nazwisko (lub fragment): ");
+                String lastName = scanner.next();
+                System.out.println("\nWyniki wyszukiwania: ");
+                service.searchByLastName(lastName);
             }
-            case 4 -> {
+            case "4" -> {
+                System.out.print("\n[WYSZUKIWANIE] Podaj pesel (lub fragment): ");
+                String pesel = scanner.next();
+                System.out.println("\nWyniki wyszukiwania: ");
+                service.searchByPesel(pesel);
             }
-            case 5 -> {
-                System.out.println("Wychodzenie z aplikacji...");
+            case "5" -> {
+                System.out.println("\nWychodzenie z aplikacji...");
                 return;
             }
-            default -> System.out.println("Nie ma takiej opcji!");
+            default -> System.out.println("\nNie ma takiej opcji!\n");
         }
     }
 }

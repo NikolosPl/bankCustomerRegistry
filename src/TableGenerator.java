@@ -11,10 +11,11 @@ public class TableGenerator {
             wID = Math.max(wID, String.valueOf(c.id()).length());
             wPesel = Math.max(wPesel, c.pesel().length());
             wName = Math.max(wName, (c.lastName() + ", " + c.firstName()).length());
-            wAccount = Math.max(wAccount, c.accountNumber() != null ? c.accountNumber().length() : "BRAK".length());
+            wAccount = Math.max(wAccount, c.accountNumber() != null ? c.accountNumber().length() : "BRAK RACHUNKU".length());
         }
         String format = "%-" + wID + "s | %-" + wPesel + "s | %-" + wName + "s | %-" + wAccount + "s%n";
-        String sep = "-".repeat(wID + wPesel + wName + wAccount + 9); // 3 separatory x 3 znaki (" | ")
+        String sep = "-".repeat(wID + wPesel + wName + wAccount + 9 + 5); // 3 separatory x 3 znaki (" | "); 5 dla wygladu
+        System.out.println(sep);
         System.out.printf(format, "ID", "PESEL", "Nazwisko Imie", "Numer konta");
         System.out.println(sep);
         for (Customer c : customers){
@@ -22,8 +23,9 @@ public class TableGenerator {
                     c.id(),
                     c.pesel(),
                     c.lastName() + " " + c.firstName(),
-                    c.accountNumber() != null ? c.accountNumber() : "BRAK"
+                    c.accountNumber() != null ? c.accountNumber() : "BRAK RACHUNKU"
             );
         }
+        System.out.println(sep);
     }
 }
