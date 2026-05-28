@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.Scanner;
 
 public class CustomerService {
     private final TableGenerator generator;
@@ -12,39 +13,22 @@ public class CustomerService {
         this.generator = new TableGenerator();
     }
 
+    private boolean isValidPesel(String pesel){
+        return pesel.matches("\\d{11}");
+    }
+    private boolean isValidAccountNumber(String accountNumber){
+        return accountNumber.matches("\\d{26}");
+    }
+
     public void addClient(String firstName, String lastName, String pesel) throws Exception {
-        if(!pesel.matches("\\d{11}")){
-            System.out.println("[BŁĄD] PESEL musi składać sie z 11 cyfr");
-            return;
-        }
-        long start = System.nanoTime();
-        try(
-                Connection conn = DataBaseConnectionManager.connect();
-                PreparedStatement insertInto = conn.prepareStatement("INSERT INTO customers(last_name, first_name, pesel) VALUES(?, ?, ?)")
-                ){
-            insertInto.setString(1, lastName);
-            insertInto.setString(2, firstName);
-            insertInto.setString(3, pesel);
-            insertInto.executeUpdate();
-        } catch (PSQLException e){
-            switch (e.getSQLState()){
-                case "23505" -> System.out.println("[BŁĄD] Klient z takim PESEL już istnieje.");
-                case "23502" -> System.out.println("[BŁĄD] Brakuje wymaganego pola.");
-                case "08001", "08006" -> System.out.println("[BŁĄD] Problem z połączeniem.");
-                default -> System.out.println("[BŁĄD] " + e.getMessage());
-            }
-            return;
-        }
-        long czasWykonania = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-        System.out.println("[SUKCES] Klient " + firstName + " " + lastName + " został pomyślnie dodany do bazy danych.");
-        System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.");
+        addClient(firstName,lastName,pesel,null);
     }
     public void addClient(String firstName, String lastName, String pesel, String accountNumber) throws Exception {
-        if(!pesel.matches("\\d{11}")){
+        if(isValidPesel(pesel)){
             System.out.println("[BŁĄD] PESEL musi składać sie z 11 cyfr");
             return;
         }
-        if(!accountNumber.matches("\\d{26}")){
+        if(isValidAccountNumber(accountNumber)){
             System.out.println("[BŁĄD] Numer konta musi składać sie z 26 cyfr");
             return;
         }
@@ -72,12 +56,12 @@ public class CustomerService {
         System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.");
     }
 
-    public void addNumberAccount(String pesel, String accountNumber) throws Exception {
-        if(!accountNumber.matches("\\d{26}")){
+    public void addAccountNumber(String pesel, String accountNumber) throws Exception {
+        if(isValidAccountNumber(accountNumber)){
             System.out.println("[BŁĄD] Numer konta musi składać sie z 26 cyfr");
             return;
         }
-        if(!pesel.matches("\\d{11}")){
+        if(isValidPesel(pesel)){
             System.out.println("[BŁĄD] Pesel musi składać sie z 11 cyfr");
             return;
         }
@@ -89,6 +73,15 @@ public class CustomerService {
                 ){
             check.setString(1, pesel);
             try(ResultSet rs = check.executeQuery()){
+                if(rs.getString("account_number") != null){
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.print("[INFO] Klient o takim peselu aktualnie posiada numer konta, czy chcesz go nadpisać? ");
+                    String submit = scanner.nextLine();
+                    if(!submit.equalsIgnoreCase("tak")){
+                        System.out.println("[INFO] Numer konta nie został nadpisany.");
+                        return;
+                    }
+                }
                 if(!rs.next()) {
                     System.out.println("[BŁĄD] W bazie nie ma klienta z takim peselem.");
                     return;
@@ -107,6 +100,10 @@ public class CustomerService {
     }
 
     public void searchByLastName(String lastName) throws Exception{
+        if(lastName.length() < 3){
+            System.out.println("[BŁĄD] Musisz podać nazwisko.\n");
+            return;
+        }
         ArrayList<Customer> customers = new ArrayList<>();
         long start = System.nanoTime();
         try(
@@ -155,7 +152,7 @@ public class CustomerService {
                 }
             }
             if(customers.isEmpty()){
-                System.out.println("\n[BŁĄD] Nie ma klienta o takim peselu.\n");
+                System.out.println("\n[INFO] Nie ma klienta o takim peselu.\n");
                 return;
             }
         }

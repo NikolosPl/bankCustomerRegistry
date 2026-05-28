@@ -13,35 +13,35 @@ void main() throws Exception{
         switch (scanner.nextLine()){
             case "1" -> {
                 System.out.print("\n[DODAWANIE] Podaj imię: ");
-                String imie = scanner.nextLine();
+                String firstName = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj nazwisko: ");
-                String nazwisko = scanner.nextLine();
+                String lastName = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj PESEL: ");
                 String pesel = scanner.nextLine();
                 System.out.println();
-                service.addClient(imie,nazwisko,pesel);
+                service.addClient(firstName,lastName,pesel);
                 System.out.println();
             }
             case "2" -> {
                 System.out.print("\n[DODAWANIE] Podaj imię: ");
-                String imie = scanner.nextLine();
+                String firstName = scanner.nextLine();
                 System.out.print("\n[DODAWANIE] Podaj nazwisko: ");
-                String nazwisko = scanner.nextLine();
+                String lastName = scanner.nextLine();
                 System.out.print("\n[DODAWANIE] Podaj PESEL: ");
                 String pesel = scanner.nextLine();
                 System.out.print("\n[DODAWANIE] Podaj numer konta: ");
                 String numerKonta = scanner.nextLine();
                 System.out.println();
-                service.addClient(imie,nazwisko,pesel,numerKonta);
+                service.addClient(firstName,lastName,pesel,numerKonta);
                 System.out.println();
             }
             case "3" -> {
                 System.out.print("\n[DODAWANIE] Podaj pesel: ");
                 String pesel = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj numer konta: ");
-                String numerKonta = scanner.nextLine();
+                String accountNumber = scanner.nextLine();
                 System.out.println();
-                service.addNumberAccount(pesel, numerKonta);
+                service.addAccountNumber(pesel, accountNumber);
                 System.out.println();
             }
             case "4" -> {
@@ -58,6 +58,7 @@ void main() throws Exception{
             }
             case "6" -> {
                 System.out.println("\nWychodzenie z aplikacji...");
+                scanner.close();
                 DataBaseConnectionManager.shutdown();
                 return;
             }
