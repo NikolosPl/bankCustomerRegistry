@@ -90,6 +90,9 @@ public class CustomerService {
     }
 
     public void searchByLastName(String lastName) throws Exception{
+        if(lastName.length() < 2){
+            System.out.println("[BŁĄD] Długość nazwiska musi składać sie z minimum 2 znaków");
+        }
         ArrayList<Customer> customers = new ArrayList<>();
         long start = System.nanoTime();
         try(
@@ -149,8 +152,10 @@ public class CustomerService {
     }
 
     public boolean hasAccountNumber(String pesel) throws Exception{
-        try(Connection conn = DataBaseConnectionManager.connect()){
-            PreparedStatement check = conn.prepareStatement("SELECT customers.account_number FROM customers WHERE pesel = ?");
+        try(
+                Connection conn = DataBaseConnectionManager.connect();
+                PreparedStatement check = conn.prepareStatement("SELECT customers.account_number FROM customers WHERE pesel = ?")
+        ) {
             check.setString(1, pesel);
             try(ResultSet rs = check.executeQuery()){
                 if(!rs.next()) return false;
