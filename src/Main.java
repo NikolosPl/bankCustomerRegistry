@@ -58,6 +58,7 @@ void main() throws Exception{
             }
             case "6" -> {
                 System.out.println("\nWychodzenie z aplikacji...");
+                DataBaseConnectionManager.shutdown();
                 return;
             }
             default -> System.out.println("\nNie ma takiej opcji!\n");

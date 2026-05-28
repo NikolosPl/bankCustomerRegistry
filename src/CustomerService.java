@@ -19,7 +19,7 @@ public class CustomerService {
         }
         long start = System.nanoTime();
         try(
-                Connection conn = new DataBaseConnectionManager().connect();
+                Connection conn = DataBaseConnectionManager.connect();
                 PreparedStatement insertInto = conn.prepareStatement("INSERT INTO customers(last_name, first_name, pesel) VALUES(?, ?, ?)")
                 ){
             insertInto.setString(1, lastName);
@@ -50,7 +50,7 @@ public class CustomerService {
         }
         long start = System.nanoTime();
         try(
-                Connection conn = new DataBaseConnectionManager().connect();
+                Connection conn = DataBaseConnectionManager.connect();
                 PreparedStatement insertInto = conn.prepareStatement("INSERT INTO customers(last_name, first_name, pesel, account_number) VALUES(?, ?, ?, ?)")
                 ){
             insertInto.setString(1, lastName);
@@ -83,7 +83,7 @@ public class CustomerService {
         }
         long start = System.nanoTime();
         try(
-                Connection conn = new DataBaseConnectionManager().connect();
+                Connection conn = DataBaseConnectionManager.connect();
                 PreparedStatement check = conn.prepareStatement("SELECT 1 FROM customers WHERE pesel = ?");
                 PreparedStatement insertAccountNumber = conn.prepareStatement("UPDATE customers SET account_number = ? WHERE pesel = ?")
                 ){
@@ -110,7 +110,7 @@ public class CustomerService {
         ArrayList<Customer> customers = new ArrayList<>();
         long start = System.nanoTime();
         try(
-                Connection conn = new DataBaseConnectionManager().connect();
+                Connection conn = DataBaseConnectionManager.connect();
                 PreparedStatement selectLastName = conn.prepareStatement("SELECT * FROM customers WHERE last_name LIKE ?")
                 ){
             selectLastName.setString(1, lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase() + "%");
@@ -133,13 +133,13 @@ public class CustomerService {
         generator.generateTable(customers);
         System.out.println();
         long czasWykonania = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-        System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.");
+        System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.\n");
     }
     public void searchByPesel(String pesel) throws Exception{
         ArrayList<Customer> customers = new ArrayList<>();
         long start = System.nanoTime();
         try(
-                Connection conn = new DataBaseConnectionManager().connect();
+                Connection conn = DataBaseConnectionManager.connect();
                 PreparedStatement selectPesel = conn.prepareStatement("SELECT * FROM customers WHERE pesel = ?")
                 ){
             selectPesel.setString(1, pesel);
@@ -162,6 +162,6 @@ public class CustomerService {
         generator.generateTable(customers);
         System.out.println();
         long czasWykonania = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-        System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.");
+        System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.\n");
     }
 }

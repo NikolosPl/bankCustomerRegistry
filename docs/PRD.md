@@ -53,5 +53,4 @@ Podział na klasy zgodnie z architekturą warstwową i zasadą Single Responsibi
 ---
 
 ## 6. Rozszerzenia (Opcjonalne / Dla ambitnych)
-* **Connection Pooling:** Wdrożenie biblioteki HikariCP do zarządzania pulą połączeń zamiast tworzenia nowego połączenia dla każdej operacji.
-* **Baza In-Memory do Testów:** Konfiguracja bazy H2 w trybie kompatybilności z PostgreSQL do automatycznych testów jednostkowych i integracyjnych repozytorium.
+* **Connection Pooling:** Wdrożenie biblioteki HikariCP do zarządzania pulą połączeń zamiast tworzenia nowego połączenia dla każdej operacji. .
