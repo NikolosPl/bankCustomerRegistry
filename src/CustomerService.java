@@ -90,8 +90,9 @@ public class CustomerService {
     }
 
     public void searchByLastName(String lastName) throws Exception{
-        if(lastName.length() < 2){
+        if(lastName.trim().length() < 2){
             System.out.println("[BŁĄD] Długość nazwiska musi składać sie z minimum 2 znaków");
+            return;
         }
         ArrayList<Customer> customers = new ArrayList<>();
         long start = System.nanoTime();
