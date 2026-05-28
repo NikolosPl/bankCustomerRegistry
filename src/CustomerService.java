@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.Scanner;
 
 public class CustomerService {
     private final TableGenerator generator;
@@ -13,22 +12,22 @@ public class CustomerService {
         this.generator = new TableGenerator();
     }
 
-    private boolean isValidPesel(String pesel){
-        return pesel.matches("\\d{11}");
+    private boolean isInvalidPesel(String pesel){
+        return !pesel.matches("\\d{11}");
     }
-    private boolean isValidAccountNumber(String accountNumber){
-        return accountNumber.matches("\\d{26}");
+    private boolean isInvalidAccountNumber(String accountNumber){
+        return !accountNumber.matches("\\d{26}");
     }
 
     public void addClient(String firstName, String lastName, String pesel) throws Exception {
         addClient(firstName,lastName,pesel,null);
     }
     public void addClient(String firstName, String lastName, String pesel, String accountNumber) throws Exception {
-        if(isValidPesel(pesel)){
+        if(isInvalidPesel(pesel)){
             System.out.println("[BŁĄD] PESEL musi składać sie z 11 cyfr");
             return;
         }
-        if(isValidAccountNumber(accountNumber)){
+        if(isInvalidAccountNumber(accountNumber)){
             System.out.println("[BŁĄD] Numer konta musi składać sie z 26 cyfr");
             return;
         }
@@ -57,11 +56,11 @@ public class CustomerService {
     }
 
     public void addAccountNumber(String pesel, String accountNumber) throws Exception {
-        if(isValidAccountNumber(accountNumber)){
+        if(isInvalidAccountNumber(accountNumber)){
             System.out.println("[BŁĄD] Numer konta musi składać sie z 26 cyfr");
             return;
         }
-        if(isValidPesel(pesel)){
+        if(isInvalidPesel(pesel)){
             System.out.println("[BŁĄD] Pesel musi składać sie z 11 cyfr");
             return;
         }
@@ -73,15 +72,6 @@ public class CustomerService {
                 ){
             check.setString(1, pesel);
             try(ResultSet rs = check.executeQuery()){
-                if(rs.getString("account_number") != null){
-                    Scanner scanner = new Scanner(System.in);
-                    System.out.print("[INFO] Klient o takim peselu aktualnie posiada numer konta, czy chcesz go nadpisać? ");
-                    String submit = scanner.nextLine();
-                    if(!submit.equalsIgnoreCase("tak")){
-                        System.out.println("[INFO] Numer konta nie został nadpisany.");
-                        return;
-                    }
-                }
                 if(!rs.next()) {
                     System.out.println("[BŁĄD] W bazie nie ma klienta z takim peselem.");
                     return;
@@ -100,10 +90,6 @@ public class CustomerService {
     }
 
     public void searchByLastName(String lastName) throws Exception{
-        if(lastName.length() < 3){
-            System.out.println("[BŁĄD] Musisz podać nazwisko.\n");
-            return;
-        }
         ArrayList<Customer> customers = new ArrayList<>();
         long start = System.nanoTime();
         try(
@@ -160,5 +146,16 @@ public class CustomerService {
         System.out.println();
         long czasWykonania = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
         System.out.println("[JDBC LOG] Zapytanie wykonane w " + czasWykonania + "ms. Połączenie bezpiecznie zamknięte.\n");
+    }
+
+    public boolean hasAccountNumber(String pesel) throws Exception{
+        try(Connection conn = DataBaseConnectionManager.connect()){
+            PreparedStatement check = conn.prepareStatement("SELECT customers.account_number FROM customers WHERE pesel = ?");
+            check.setString(1, pesel);
+            try(ResultSet rs = check.executeQuery()){
+                if(!rs.next()) return false;
+                return rs.getString("account_number") != null;
+            }
+        }
     }
 }

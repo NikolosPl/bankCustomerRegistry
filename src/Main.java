@@ -40,6 +40,14 @@ void main() throws Exception{
                 String pesel = scanner.nextLine();
                 System.out.print("[DODAWANIE] Podaj numer konta: ");
                 String accountNumber = scanner.nextLine();
+
+                if(service.hasAccountNumber(pesel)){
+                    System.out.print("[INFO] Klient posiada już numer konta. Nadpisać? (tak/nie): ");
+                    if(!scanner.nextLine().equalsIgnoreCase("tak")){
+                        System.out.println("[INFO] Numer konta nie został nadpisany.");
+                        break;
+                    }
+                }
                 System.out.println();
                 service.addAccountNumber(pesel, accountNumber);
                 System.out.println();
